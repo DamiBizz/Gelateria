@@ -31,9 +31,10 @@
 
     <!-- pulsante per l'inserimento di un nuovo PRODOTTO -->
     <h3>Inserisci un nuovo Prodotto</h3>
-    <form action="inserimento_Prodotto.php" method="POST">
+    <form action="inserimento_Prodotto.php" method="POST" enctype="multipart/form-data">
         nome Prodotto<input maxlength="60" type="text" name="nome" required/>
-        qunatità disponibile<input type="number" min="0" max="999" name="qunatitaDisponibile"/>
+        qunatità disponibile<input type="number" min="0" max="999" name="qunatitaDisponibile"/><br>
+        immagine<input type="file" name="immagine" />
         <!-- inserire la relazione con la tabella ingrediente -->
         Ingredienti: <select class="mul-select" multiple="true" name="IDIngrediente[]"> <?php select('nome', 'ingrediente'); ?> </select>
         <input type="submit" value="Conferma" />

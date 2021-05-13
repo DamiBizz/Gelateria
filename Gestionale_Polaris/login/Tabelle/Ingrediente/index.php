@@ -28,11 +28,11 @@
     <form action="inserimento_Ingrediente.php" method="POST">
         nome Ingrediente<input maxlength="40" type="text" name="nome" required/>
         sigla<input input maxlength="10" type="text" name="sigla"/>
+        
         <!-- relazione -->
         Allergene: <select name="IDAllergene"> <?php select('nome', 'allergene'); ?> </select>
         <input type="submit" value="Conferma" />
     </form>
-    
 
     <!-- stampa la tabella con la possiblità di modificare ed eliminare un singolo campo -->
     <h3>Tabella</h3>

@@ -1,0 +1,5 @@
+Gestionale:
+- Salvare le immagini sul server del cliente
+- quando il gelataio elimina una directory eliminare pure la sua immagine corrispondendte salvata nel Server
+- inserire la modifica di un'immagine
+- inserire delle select, per visualizzare i dati inseriti per il gelataio
