@@ -33,6 +33,27 @@
         .logo {
             height: 28px;
         }
+
+        .section-title {
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            width: 30px;
+            height: 2px;
+            background: #007bff;
+            position: absolute;
+            left: 50%;
+            margin-left: -15px;
+            bottom: -20px;
+        }
+
+        .page-content {
+            position: relative;
+            background: #fafafa;
+            padding-top: 5.3125rem;
+        }
     </style>
 </head>
 
@@ -50,8 +71,8 @@
                     </button>
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">Gelati</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#gelati">Gelati</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Dove siamo</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Contattaci</a></li>
                         </ul>
@@ -67,6 +88,92 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="section py-4">
+        <h3 id="gelati" class="section-title text-center my-5">I nostri Gelati</h3>
+        <!-- Gelati -->
+        <div class="container">
+            <div class="col-md-12 ml-auto mr-auto">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                        <div class="card">
+                            <img class="card-img-top" src="immagini/bfie82hfh9.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Torrone</h4>
+                                <p class="card-text">He seems sinking under the evidence could not only grieve and a visit. The father is to bless and placed in his length hid...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                        <div class="card">
+                            <img class="card-img-top" src="immagini/bfie82hfh9.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Cookies</h4>
+                                <p class="card-text">He seems sinking under the evidence could not only grieve and a visit. The father is to bless and placed in his length hid...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                        <div class="card">
+                            <img class="card-img-top" src="immagini/bfie82hfh9.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Vaniglia</h4>
+                                <p class="card-text">He seems sinking under the evidence could not only grieve and a visit. The father is to bless and placed in his length hid...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                        <div class="card">
+                            <img class="card-img-top" src="immagini/bfie82hfh9.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Amarena</h4>
+                                <p class="card-text">He seems sinking under the evidence could not only grieve and a visit. The father is to bless and placed in his length hid...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                        <div class="card">
+                            <img class="card-img-top" src="immagini/bfie82hfh9.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Cioccolato</h4>
+                                <p class="card-text">He seems sinking under the evidence could not only grieve and a visit. The father is to bless and placed in his length hid...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                        <div class="card">
+                            <img class="card-img-top" src="immagini/bfie82hfh9.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Stracciatella</h4>
+                                <p class="card-text">He seems sinking under the evidence could not only grieve and a visit. The father is to bless and placed in his length hid...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                        <div class="card">
+                            <img class="card-img-top" src="immagini/bfie82hfh9.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Bacio</h4>
+                                <p class="card-text">He seems sinking under the evidence could not only grieve and a visit. The father is to bless and placed in his length hid...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                        <div class="card">
+                            <img class="card-img-top" src="immagini/bfie82hfh9.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Tiramisu</h4>
+                                <p class="card-text">He seems sinking under the evidence could not only grieve and a visit. The father is to bless and placed in his length hid...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- / Gelati -->
     </div>
 
     <!-- Optional JavaScript -->
