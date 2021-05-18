@@ -38,20 +38,35 @@
     
 
     <!-- pulsante per l'inserimento di un nuovo PRODOTTO -->
-    <h3>Inserisci un nuovo Prodotto</h3>
-    <form action="modifica_Prodotto.php" method="POST">
+    <form action="modifica_Prodotto.php" method="POST" enctype="multipart/form-data">
+        <img width="40px" height="40px" src=<?php echo "'../../../Immagini_Gelati/$_POST[nome].$_POST[estensione_img]'"?>> </img>
         <input type="hidden" name="ID" value="<?php echo $_POST['ID']?>"/><br />
         nome Prodotto<input maxlength="60" type="text" name="nome" value="<?php echo $_POST['nome']?>" required/><br />
-        qunatità disponibile<input type="number" min="0" max="999" name="quantitaDisponibile" value="<?php echo $_POST['quantitaDisponibile']?>" required/> <br />
+
+        Disponibile atttualemente? 
+            <input type="checkbox" value="true" name="disponibile" <?php if($_POST['disponibile']==1) echo "checked"; ?>>
+            <label for="disponibile">Si</label>
+
+        
+        new image<input type="file" name="modifica_immagine"/>
+
         <!-- inserire la relazione con la tabella ingrediente -->
+
+        <input type="hidden" name="img_vecchia" value= "<?php echo $_POST['nome'].'.'.$_POST['estensione_img']?>" />
+        <input type="hidden" name="estensione_img_vecchia" value= "<?php echo $_POST['estensione_img']?>" />
         
         Ingredienti: <select class="mul-select" multiple="true" name="IDIngrediente[]"> <?php select('nome', 'ingrediente', $_POST['nomeIngrediente']); ?> </select>
         <input type="submit" value="Conferma" />
     </form>
 
+
+
+
+
+
     <script>
         $(".mul-select").select2({
-            placeholder: "Seleziona Ingredienti",
+            placeholder: "Seleziona",
             tags: true,
             tokenSeparators: ['/',',',';'," "] 
         });

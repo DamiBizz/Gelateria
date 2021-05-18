@@ -73,7 +73,7 @@
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="ingrediente" name="tabella"/>
                                     <button type="submit">
-                                        <img width="24px" height="24px" src="../images/delete.png"></img>
+                                        <img width="24px" height="24px" src="../../../Images/delete.png"></img>
                                     </button>
                                 </form>' . "</td>";
                 echo "<td>" . '<form action="modifica_Ingrediente_form.php" method="POST">
@@ -82,7 +82,7 @@
                                     <input type="hidden" value="'.$row['sigla'].'" name="sigla"/>
                                     <input type="hidden" value="'.$row['IDAllergene'].'" name="IDAllergene"/>
                                     <button type="submit">
-                                        <img width="24px" height="24px" src="../images/edit.png"></img>
+                                        <img width="24px" height="24px" src="../../../Images/edit.png"></img>
                                     </button>
                                 </form>' . "</td>";
                 echo "</tr>";

@@ -1,10 +1,11 @@
 <?php
 
     //---------------------------------Attributi--------------------------------------
-    include '../../../connessione_db.php';
+    $connessione_db = '../../../connessione_db.php';
     $nome = $_POST['nome'];
 
     
+    include "$connessione_db";
     //---------------------------------Inserimento dell'Allergene--------------------------------------
     $stmt = $conn->prepare("INSERT INTO allergene(nome) VALUES (?)");
 	$stmt->bind_param("s", $nome);

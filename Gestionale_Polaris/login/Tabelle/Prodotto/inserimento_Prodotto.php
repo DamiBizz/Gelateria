@@ -1,10 +1,15 @@
 <?php
+    $_connessione_db = '../../../connessione_db.php';
+    $folderName = "../../../Immagini_Gelati/";
 
     //---------------------------------Attributi--------------------------------------
-    include '../../../connessione_db.php';
+    
     $nome = $_POST['nome'];
-    if (empty($_POST["qunatitaDisponibile"])) $qunatitaDisponibile = 0;
-    else $qunatitaDisponibile = $_POST['qunatitaDisponibile'];
+
+    $disponibile = 0; //false
+    if(!empty($_POST['disponibile'])){
+        $disponibile = 1; //true
+    }
 
     if (isset($_POST["IDIngrediente"])) {
         $IDIngrediente = $_POST["IDIngrediente"];
@@ -13,21 +18,15 @@
     } else $IDIngrediente = "N/A";
 
 
-
-
-
-
-
-
-
+    //---------------IMMAGINE-------------------------
     $immagine = $_FILES["immagine"]["name"];
-    $folderName = "immagini/";
-    // Generate a unique name for the image 
-    // to prevent overwriting the existing image
-    $filePath = $folderName . rand(10000, 990000) . '_' . time() . '.' . "png";
+    $type = $_FILES["immagine"]["type"];
+    $estensione = explode("/", $type);
+    $filePath = $folderName . "$nome.$estensione[1]";
 
-    //tipo
-    if($_FILES["immagine"]["type"]!="image/png"){
+    //accetto solo tipo png e jpeg
+    if($type!="image/png" && $type!="image/jpeg"){
+        echo "type-->".$type;
         ?><script> alert("Errore formato non valido!!!"); </script><?php
         include "index.php";
         die();
@@ -47,14 +46,14 @@
         die();
     }
 
+    $estensione_img ="$estensione[1]";
 
-
-
+    include "$_connessione_db";
 
     //---------------------------------Inserimento del Prodotto--------------------------------------
     //echo "INSERT INTO prodotto(nome, quantitaDisponibile) VALUES ('$nome', '$qunatitaDisponibile')";
-    $stmt = $conn->prepare("INSERT INTO prodotto(nome, quantitaDisponibile, immagine) VALUES (?,?,?)");
-    $stmt->bind_param("sis", $nome, $qunatitaDisponibile, $filePath);
+    $stmt = $conn->prepare("INSERT INTO prodotto(nome, estensione_img, disponibile) VALUES (?,?,?)");
+    $stmt->bind_param("ssi", $nome, $estensione_img, $disponibile);
     if (!$stmt->execute()) {
         ?><script> alert("Errore inserimento dati !!!"); </script><?php
                 include "index.php";
@@ -62,9 +61,6 @@
             }
 
             if ($IDIngrediente == "N/A") {
-                ?><script>
-                    alert("Attenzione, non hai collegato il Prodotto ad alcun ingrediente");
-                </script><?php
                 include 'index.php';
                 exit;
             }

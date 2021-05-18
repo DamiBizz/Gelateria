@@ -7,7 +7,9 @@
     <?php
         
         $utente = $_POST['utente'];
-        $password = $_POST['psw'];
+        $pwd = $_POST['pwd'];
+        $amministratore = 0;
+        if(!empty($_POST['amministratore']))$amministratore = $_POST['amministratore']; //1
         
 
         $recaptcha = NULL;
@@ -16,46 +18,70 @@
         }
 
         if(!$recaptcha){
-            include 'index.php';
-            exit;
+            echo "sei un robot";
         }
 
         $secretKey = "6LfpkdEaAAAAAHfl7nsn2aNNmT0bBuQtjBsspPKC";
         $ip = $_SERVER['REMOTE_ADDR'];
-        // post request to server
         $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($secretKey) .  '&response=' . urlencode($recaptcha);
         $response = file_get_contents($url);
         $responseKeys = json_decode($response,true);
-        // should return JSON with success as true
         
         if($responseKeys["success"]) {
-            //accedi alla pagina
-
             
             include '../connessione_db.php';
 
+
             /*
-            echo "password-->".$password;
-            $supp2="SELECT ID FROM utente WHERE utente.nome = '$utente' AND utente.password= '$password'";
-            echo $supp2;
+                $sql3 = "SELECT ID FROM prodotto WHERE nome=?";
+                $stmt3 = $conn->prepare($sql3);
+                $stmt3->bind_param("s", $nome);
+                $stmt3->execute();
+                $result3 = $stmt3->get_result();
+                $row3 = $result3->fetch_assoc();
+                $IDProdotto = $row3['ID'];
             */
 
-            $sql="SELECT ID FROM utente WHERE utente.nome = ? AND utente.password= ?";
+
+            $sql = "SELECT pwd FROM Utente WHERE nome=?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ss", $utente, $password);
+            $stmt->bind_param("s", $utente);
             $stmt->execute();
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();
             
-            $ID = $row['ID'];
-            echo "$ID";
-
-            if(isset($ID)){
-                include 'home.php';
+            if(is_null($row)){
+                echo "non esiste l'utente";
+                exit;
             }
-            //else include 'index.php';
-            else include 'home.php';
+            else{
+        
+                if(password_verify($pwd	, $row['pwd'])){
+                    session_start();
+                    $_SESSION['autorizzato'] = 1;
+                    $_SESSION['time'] = time();
+                    $_SESSION['utente'] = $utente;
+                    
+                    if($row['ruolo'] == 1){
+                        echo "Loggato come AMMINISTRATORE";
+                    }
+                    else{ 
+                        echo "Loggato come No AMMINISTRATORE";
+                    }
+                }
+
+                else{
+                    echo "password sbagliata"; 
+                }
+            }
+        
+            mysqli_close($conn);
         }
+
+        else {
+            echo "Prego identificati";
+        }
+            
     ?>
 </body>
 </html>

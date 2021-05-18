@@ -18,7 +18,6 @@
             
             $sql = "SELECT DISTINCT $name,ID FROM $tabella ORDER BY $name";
             $result = $conn->query($sql);
-            echo "<option></option>";
             while($row = $result->fetch_assoc())
             {
                 $var = $row["ID"];
@@ -32,9 +31,14 @@
     <!-- pulsante per l'inserimento di un nuovo PRODOTTO -->
     <h3>Inserisci un nuovo Prodotto</h3>
     <form action="inserimento_Prodotto.php" method="POST" enctype="multipart/form-data">
-        nome Prodotto<input maxlength="60" type="text" name="nome" required/>
-        qunatità disponibile<input type="number" min="0" max="999" name="qunatitaDisponibile"/><br>
-        immagine<input type="file" name="immagine" />
+        nome Prodotto<input maxlength="60" type="text" name="nome" required/> <br>
+
+        Disponibile atttualemente? 
+            <input type="checkbox" value="true" name="disponibile">
+            <label for="disponibile">Si</label>
+
+        <br>
+        immagine<input type="file" name="immagine" required/> <br>
         <!-- inserire la relazione con la tabella ingrediente -->
         Ingredienti: <select class="mul-select" multiple="true" name="IDIngrediente[]"> <?php select('nome', 'ingrediente'); ?> </select>
         <input type="submit" value="Conferma" />
@@ -56,8 +60,9 @@
 
         <tr>
             <th>nome</a></th>
-            <th>Qunatità disp.</th>
-            <th>Ingredienti</th>
+            <th>Disponibile?</th>
+            <th>Immagine</th>
+            <th>Ingrediente</th>
             <th></th>
             <th></th>
         </tr>
@@ -65,14 +70,15 @@
         <?php
             include '../../../connessione_db.php';
 
-            $sql = "SELECT * FROM prodotto";
+            $sql = "SELECT * FROM prodotto ORDER BY prodotto.nome";
 
             $result = $conn->query($sql);
 
             while ($row=$result->fetch_assoc()) {
                 echo "<tr>";
                 echo "<td>".$row["nome"]."</td>";
-                echo "<td>".$row["quantitaDisponibile"]."</td>";
+                echo "<td>".$row["disponibile"]."</td>";
+                echo "<td>".'<img width="40px" height="40px" src="../../../Immagini_Gelati/'.$row["nome"].'.'.$row["estensione_img"].'"></img>'."</td>";
 
 
                 //---------------------------------Scrivere il nome dell'allergene non il numero--------------------------------------
@@ -94,20 +100,23 @@
 
 
 
-                echo "<td>" . '<form onsubmit="return confirm('."'Sei sicuro/a di cancellare la riga?'".');" action="../delete_row.php" method="POST">
+                echo "<td>" . '<form onsubmit="return confirm('."'Sei sicuro/a di cancellare la riga?'".');" action="delete_row.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
+                                    <input type="hidden" value="'.$row['nome'].'" name="nome"/>
+                                    <input type="hidden" value="'.$row['estensione_img'].'" name="estensione_img"/>
                                     <input type="hidden" value="prodotto" name="tabella"/>
                                     <button type="submit">
-                                        <img width="24px" height="24px" src="../images/delete.png"></img>
+                                        <img width="24px" height="24px" src="../../../Images/delete.png"></img>
                                     </button>
                                 </form>' . "</td>";
                 echo "<td>" . '<form action="modifica_Prodotto_form.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="'.$row['nome'].'" name="nome"/>
-                                    <input type="hidden" value="'.$row['quantitaDisponibile'].'" name="quantitaDisponibile"/>
+                                    <input type="hidden" value="'.$row['estensione_img'].'" name="estensione_img"/>
+                                    <input type="hidden" value="'.$row['disponibile'].'" name="disponibile"/>
                                     <input type="hidden" value="'.$supp.'" name="nomeIngrediente"/>
                                     <button type="submit">
-                                        <img width="24px" height="24px" src="../images/edit.png"></img>
+                                        <img width="24px" height="24px" src="../../../Images/edit.png"></img>
                                     </button>
                                 </form>' . "</td>";
                 echo "</tr>";

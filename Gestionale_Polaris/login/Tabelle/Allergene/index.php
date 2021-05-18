@@ -3,6 +3,11 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <title>Allergene</title>
+
+    <?php
+        $connessione_db = '../../../connessione_db.php';
+    ?>
+
 </head>
 <body>
     
@@ -26,7 +31,7 @@
         </tr>
 
         <?php
-            include '../../../connessione_db.php';
+            include "$connessione_db";
 
             $sql = "SELECT * FROM allergene";
 
@@ -39,14 +44,14 @@
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="allergene" name="tabella"/>
                                     <button type="submit">
-                                        <img width="24px" height="24px" src="../images/delete.png"></img>
+                                        <img width="24px" height="24px" src="../../../Images/delete.png"></img>
                                     </button>
                                 </form>' . "</td>";
                 echo "<td>" . '<form action="modifica_Allergene_form.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="'.$row['nome'].'" name="nome"/>
                                     <button type="submit">
-                                        <img width="24px" height="24px" src="../images/edit.png"></img>
+                                        <img width="24px" height="24px" src="../../../Images/edit.png"></img>
                                     </button>
                                 </form>' . "</td>";
                 echo "</tr>";

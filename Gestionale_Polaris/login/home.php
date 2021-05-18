@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <!-- bootstrap Lib -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -12,50 +13,59 @@
 
 </head>
 <body>
+    <a href="index.php"><button>LOGOUT</button></a> <br><br><br>
     <!--Link per accedere alle tabella, con la possiblità di aggiungere, modificare o eliminare ogni entry-->
     <a href="Tabelle/Prodotto/index.php"><button>PRODOTTO</button></a> <br>
     <a href="Tabelle/Ingrediente/index.php"><button>INGREDIENTE</button></a> <br>
     <a href="Tabelle/Allergene/index.php"><button>ALLERGENE</button></a> <br>
-
-    
-
 
     <!---------------Funzione select, visualizza le varie opzioni------------------>
     <?php 
         function select($name, $tabella){
             include '../connessione_db.php';
             
-            $sql = "SELECT DISTINCT $name,ID FROM $tabella ORDER BY $name";
+            $sql = "SELECT DISTINCT $name FROM $tabella ORDER BY $name";
             $result = $conn->query($sql);
-            echo "<option></option>";
             while($row = $result->fetch_assoc())
             {
-                $var = $row["ID"];
+                $var = $row["nome"];
                 if(!empty($row[$name])) echo "<option name='$row[$name]' value = '$var' > $row[$name] </option>";
+
+            }
+        }
+
+        function select_ingrediente($name, $tabella){
+            include "../connessione_db.php";
+            
+            $sql = "SELECT DISTINCT $name, sigla FROM $tabella ORDER BY $name";
+            $result = $conn->query($sql);
+            while($row = $result->fetch_assoc())
+            {
+                $var = $row["nome"];
+                $output = $row["nome"];
+                if(!empty($row["sigla"]))$output = $row["nome"] . " (".$row["sigla"].")";
+                if(!empty($row[$name])) echo "<option name='$row[$name]' value = '$var' > $output </option>";
 
             }
         }
     ?>
 
-
-
+    <br><br><br>
     <!-- Ricerca per vari campi fondamentali -->
-    
-    <!-- allergene -> tt -->
-    <!-- nome Ingrediente -> tt -->
-    <!-- sigla Ingrediente -> tt -->
-    <!-- Prodotto -> tt -->
-    <form action="ricerca_tt.php" method="POST">
-        Allergene<select class="mul-select" multiple="true" name="IDIngrediente[]"> <?php select('nome', 'allergene'); ?> </select>
-        Nome ingrediente<select class="mul-select" multiple="true" name="IDIngrediente[]"> <?php select('nome', 'ingrediente'); ?> </select>
-        Sigla ingrediente<select class="mul-select" multiple="true" name="IDIngrediente[]"> <?php select('sigla', 'ingrediente'); ?> </select>
-        Prodotto<select class="mul-select" multiple="true" name="IDProdotto[]"> <?php select('nome', 'prodotto'); ?> </select>
-        <input type="submit" value="Conferma" />
+    <form action="Select/ricerca.php" method="POST">
+            <input type="radio" value="true" name="disponibile">
+            <label for="disponibile">Dispobibile</label> <br>
+            <input type="radio" value="false" name="disponibile">
+            <label for="disponibile">Non disponibile</label> <br>
+        <select class="mul-select" multiple="true" name="Prodotto[]"> <?php select('nome', 'prodotto'); ?> </select>Prodotto <br>
+        <select class="mul-select" multiple="true" name="Ingrediente[]"> <?php select_ingrediente('nome', 'ingrediente'); ?></select>Ingrediente <br>
+        <select class="mul-select" multiple="true" name="Allergene[]"> <?php select('nome', 'allergene'); ?> </select>Allergene <br>
+        <input type="submit" value="Ricerca" /> 
     </form>
 
     <script>
         $(".mul-select").select2({
-            placeholder: "Seleziona Ingredienti",
+            placeholder: "Ricerca x",
             tags: true,
             tokenSeparators: ['/',',',';'," "] 
         });
