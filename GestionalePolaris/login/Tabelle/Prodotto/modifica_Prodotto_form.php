@@ -39,7 +39,7 @@
 
     <!-- pulsante per l'inserimento di un nuovo PRODOTTO -->
     <form action="modifica_Prodotto.php" method="POST" enctype="multipart/form-data">
-        <img width="40px" height="40px" src=<?php echo "'../../../Immagini_Gelati/$_POST[nome].$_POST[estensione_img]'"?>> </img>
+        <img width="40px" height="40px" src=<?php echo "'../../../../Cliente/immagini/$_POST[nome].$_POST[estensione_img]'"?>> </img>
         <input type="hidden" name="ID" value="<?php echo $_POST['ID']?>"/><br />
         nome Prodotto<input maxlength="60" type="text" name="nome" value="<?php echo $_POST['nome']?>" required/><br />
 
@@ -56,10 +56,10 @@
         <input type="hidden" name="estensione_img_vecchia" value= "<?php echo $_POST['estensione_img']?>" />
         
         Ingredienti: <select class="mul-select" multiple="true" name="IDIngrediente[]"> <?php select('nome', 'ingrediente', $_POST['nomeIngrediente']); ?> </select>
+
+        Text: <input maxlength="500" type="text" name="text" value="<?php echo $_POST['text']?>"/> <br>
         <input type="submit" value="Conferma" />
     </form>
-
-
 
 
 

@@ -8,6 +8,8 @@
         
         $utente = $_POST['utente'];
         $pwd = $_POST['pwd'];
+        $pwd = hash('sha256', $pwd);
+
         $amministratore = 0;
         if(!empty($_POST['amministratore']))$amministratore = $_POST['amministratore']; //1
         
@@ -18,7 +20,8 @@
         }
 
         if(!$recaptcha){
-            echo "sei un robot";
+            header("Location: /login.php");
+            exit;
         }
 
         $secretKey = "6LfpkdEaAAAAAHfl7nsn2aNNmT0bBuQtjBsspPKC";
@@ -31,19 +34,7 @@
             
             include '../connessione_db.php';
 
-
-            /*
-                $sql3 = "SELECT ID FROM prodotto WHERE nome=?";
-                $stmt3 = $conn->prepare($sql3);
-                $stmt3->bind_param("s", $nome);
-                $stmt3->execute();
-                $result3 = $stmt3->get_result();
-                $row3 = $result3->fetch_assoc();
-                $IDProdotto = $row3['ID'];
-            */
-
-
-            $sql = "SELECT pwd FROM Utente WHERE nome=?";
+            $sql = "SELECT pwd, ruolo FROM Utente WHERE nome=?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("s", $utente);
             $stmt->execute();
@@ -51,27 +42,31 @@
             $row = $result->fetch_assoc();
             
             if(is_null($row)){
-                echo "non esiste l'utente";
+                header("Location: /login.php");
                 exit;
             }
             else{
         
-                if(password_verify($pwd	, $row['pwd'])){
+                if($pwd	== $row['pwd']){
                     session_start();
                     $_SESSION['autorizzato'] = 1;
                     $_SESSION['time'] = time();
                     $_SESSION['utente'] = $utente;
                     
                     if($row['ruolo'] == 1){
-                        echo "Loggato come AMMINISTRATORE";
+                        $_SESSION['ruolo'] = true;
                     }
                     else{ 
-                        echo "Loggato come No AMMINISTRATORE";
+                        $_SESSION['ruolo'] = false;
                     }
+
+                    header("Location: /");
+                    exit;  
                 }
 
                 else{
-                    echo "password sbagliata"; 
+                    header("Location: /login.php");
+                    exit;
                 }
             }
         
@@ -79,7 +74,7 @@
         }
 
         else {
-            echo "Prego identificati";
+            header("Location: /");
         }
             
     ?>

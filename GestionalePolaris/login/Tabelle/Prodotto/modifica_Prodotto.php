@@ -1,5 +1,8 @@
 <?php
 
+$folderName = "../../../../Cliente/immagini/";
+$text = $_POST['text'];
+
     //---------------------------------Attributi--------------------------------------
     include '../../../connessione_db.php';
     $IDProdotto = $_POST['ID'];
@@ -20,7 +23,7 @@
 
     //x IMG
     $img_vecchia = $_POST['img_vecchia'];
-    $folderName = "../../../Immagini_Gelati/";
+    
     $estensione_img_vecchia = $_POST['estensione_img_vecchia'];
     $estensione_img = $estensione_img_vecchia;
 
@@ -60,8 +63,8 @@
     }
 
      //---------------------------------Modifica dati PRODOTTO--------------------------------------
-     $stmt = $conn->prepare("UPDATE prodotto SET nome=?, estensione_img=?, disponibile=? WHERE ID=?");
-     $stmt->bind_param("ssii", $nome, $estensione_img, $disponibile, $IDProdotto);
+     $stmt = $conn->prepare("UPDATE prodotto SET nome=?, estensione_img=?, disponibile=?, text=? WHERE ID=?");
+     $stmt->bind_param("ssisi", $nome, $estensione_img, $disponibile, $text, $IDProdotto);
       //Controllo modifica dati
       if (!$stmt->execute()){
         ?><script>alert("Errore MODIFICA !!!");</script><?php

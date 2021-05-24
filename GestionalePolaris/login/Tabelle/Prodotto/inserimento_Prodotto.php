@@ -1,10 +1,12 @@
 <?php
     $_connessione_db = '../../../connessione_db.php';
-    $folderName = "../../../Immagini_Gelati/";
+    //$folderName = "../../../../Cliente/immagini/";
+    $folderName = "../../../../Cliente/immagini/";
 
     //---------------------------------Attributi--------------------------------------
     
     $nome = $_POST['nome'];
+    $text = $_POST['text'];
 
     $disponibile = 0; //false
     if(!empty($_POST['disponibile'])){
@@ -52,8 +54,8 @@
 
     //---------------------------------Inserimento del Prodotto--------------------------------------
     //echo "INSERT INTO prodotto(nome, quantitaDisponibile) VALUES ('$nome', '$qunatitaDisponibile')";
-    $stmt = $conn->prepare("INSERT INTO prodotto(nome, estensione_img, disponibile) VALUES (?,?,?)");
-    $stmt->bind_param("ssi", $nome, $estensione_img, $disponibile);
+    $stmt = $conn->prepare("INSERT INTO prodotto(nome, estensione_img, disponibile, text) VALUES (?,?,?,?)");
+    $stmt->bind_param("ssis", $nome, $estensione_img, $disponibile, $text);
     if (!$stmt->execute()) {
         ?><script> alert("Errore inserimento dati !!!"); </script><?php
                 include "index.php";

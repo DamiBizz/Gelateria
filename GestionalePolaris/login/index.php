@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <?php
+
+    session_start();
+
+    if (!isset($_SESSION['utente'])){ //se l'utente non si è loggato
+        header("Location: /login.php");
+        exit;
+    } 
+        
+    if (!isset($_SESSION['time'])){ //se il tempo non è stato settato
+        header("Location: /login.php");
+        exit;
+    }
+        
+?>
 
     <!-- bootstrap Lib -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -13,7 +28,7 @@
 
 </head>
 <body>
-    <a href="index.php"><button>LOGOUT</button></a> <br><br><br>
+    <a href="logout.php"><button>LOGOUT</button></a> <br><br><br>
     <!--Link per accedere alle tabella, con la possiblità di aggiungere, modificare o eliminare ogni entry-->
     <a href="Tabelle/Prodotto/index.php"><button>PRODOTTO</button></a> <br>
     <a href="Tabelle/Ingrediente/index.php"><button>INGREDIENTE</button></a> <br>
@@ -62,6 +77,14 @@
         <select class="mul-select" multiple="true" name="Allergene[]"> <?php select('nome', 'allergene'); ?> </select>Allergene <br>
         <input type="submit" value="Ricerca" /> 
     </form>
+
+    <?php
+        //se è un'amministratore
+        if($_SESSION['ruolo'] == true){ ?>
+            <a href="Tabelle/utente/index.php"><button>Gestisci gli account</button></a>
+    <?php
+        }
+    ?>
 
     <script>
         $(".mul-select").select2({

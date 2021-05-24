@@ -41,6 +41,7 @@
         immagine<input type="file" name="immagine" required/> <br>
         <!-- inserire la relazione con la tabella ingrediente -->
         Ingredienti: <select class="mul-select" multiple="true" name="IDIngrediente[]"> <?php select('nome', 'ingrediente'); ?> </select>
+        Text: <input maxlength="500" type="text" name="text"/> <br>
         <input type="submit" value="Conferma" />
     </form>
 
@@ -63,6 +64,7 @@
             <th>Disponibile?</th>
             <th>Immagine</th>
             <th>Ingrediente</th>
+            <th>Text</th>
             <th></th>
             <th></th>
         </tr>
@@ -78,7 +80,7 @@
                 echo "<tr>";
                 echo "<td>".$row["nome"]."</td>";
                 echo "<td>".$row["disponibile"]."</td>";
-                echo "<td>".'<img width="40px" height="40px" src="../../../Immagini_Gelati/'.$row["nome"].'.'.$row["estensione_img"].'"></img>'."</td>";
+                echo "<td>".'<img width="40px" height="40px" src="../../../../Cliente/immagini/'.$row["nome"].'.'.$row["estensione_img"].'"></img>'."</td>";
 
 
                 //---------------------------------Scrivere il nome dell'allergene non il numero--------------------------------------
@@ -98,7 +100,7 @@
                 }
                 echo "</td>";
 
-
+                echo "<td>".$row["text"]."</td>";
 
                 echo "<td>" . '<form onsubmit="return confirm('."'Sei sicuro/a di cancellare la riga?'".');" action="delete_row.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
@@ -114,6 +116,7 @@
                                     <input type="hidden" value="'.$row['nome'].'" name="nome"/>
                                     <input type="hidden" value="'.$row['estensione_img'].'" name="estensione_img"/>
                                     <input type="hidden" value="'.$row['disponibile'].'" name="disponibile"/>
+                                    <input type="hidden" value="'.$row['text'].'" name="text"/>
                                     <input type="hidden" value="'.$supp.'" name="nomeIngrediente"/>
                                     <button type="submit">
                                         <img width="24px" height="24px" src="../../../Images/edit.png"></img>

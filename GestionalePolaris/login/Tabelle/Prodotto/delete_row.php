@@ -1,5 +1,7 @@
 <?php
 
+    $folderName = "../../../../Cliente/immagini/";
+
     include "../../../connessione_db.php";
     $ID = $_POST["ID"];
     $nome = $_POST["nome"];
@@ -15,7 +17,7 @@
         error_log( print_r( htmlspecialchars($stmt->error), true ) );
     }
 
-    $folderName = "../../../Immagini_Gelati/";
+    
     unlink ($folderName.$nome.'.'.$estensione_img);
     
     $path = $tabella . "index.php";

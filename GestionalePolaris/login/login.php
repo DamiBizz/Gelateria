@@ -5,6 +5,16 @@
 
     <title>Login</title>
     <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+
+    <?php
+        session_start();
+
+        if (isset($_SESSION['utente'])){
+            header("Location: /");
+            exit;
+        }
+    ?>
+
 </head>
 <body>
     <br /> <br />
@@ -26,10 +36,5 @@
             </form>
         </div>
   </div>
-
-  <a href="home.php">Baipassa il login</a>
-
-  <a href="index.php"><button>Password dimenticata?</button></a> <br>
-
 </body>
 </html>
