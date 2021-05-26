@@ -1,6 +1,11 @@
 <?php
     require 'C:/xampp/htdocs/Elaborato/GestionalePolaris/config.php';
     require 'C:/xampp/htdocs/Elaborato/GestionalePolaris/verifica_session.php';
+
+    if (!$_SESSION['ruolo']){
+        header("Location: $GLOBALS[domain_login]");
+        exit;
+    }
 ?>
 
 <?php

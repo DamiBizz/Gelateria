@@ -1,3 +1,52 @@
+<?php
+    function trova_allergeni($nome){
+        include 'connessione_db.php';
+
+        $sql = "SELECT DISTINCT allergene.nome
+                            FROM allergene, ingrediente, prodotto_ingrediente, prodotto
+                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                            AND ingrediente.IDAllergene = allergene.ID
+                            AND Prodotto.nome = '$nome'";
+        $result = $conn->query($sql);
+
+        $supporto = NULL;
+        while ($row = $result->fetch_assoc()) {
+            $supporto .= "$row[nome] & ";
+        }
+
+        if(!empty($supporto)){ //togli le ultime due parole
+            $supporto = substr("$supporto", 0, -2);
+        }
+        else $supporto = "Non contiene allergeni specifici";
+
+        return $supporto;
+    }
+
+    function trova_ingredienti($nome){
+
+        include 'connessione_db.php';
+
+        $sql = "SELECT DISTINCT ingrediente.nome, ingrediente.sigla
+                FROM ingrediente, prodotto_ingrediente, prodotto
+                WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                AND Prodotto.nome = '$nome'";
+
+        $result = $conn->query($sql);
+
+        $supporto = NULL;
+        while ($row = $result->fetch_assoc()) {
+            $supporto .= "$row[nome] & ";
+        }
+
+        if(!empty($supporto)){ //togli le ultime due parole
+            $supporto = substr("$supporto", 0, -2);
+        }
+        else $supporto = "Nessun ingrediente associao al momento";
+
+        return $supporto;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -94,15 +143,6 @@
     <div class="section py-4">
         <h3 id="gelati" class="section-title text-center my-5">I nostri Gelati</h3>
 
-        <!-- Normal Custom Select -->
-        <select class="custom-select" multiple>
-        <option selected>Custom select menu</option>
-        <option value="1">Option 1</option>
-        <option value="2">Option 2</option>
-        <option value="3">Option 3</option>
-        </select>
-
-
         <!-- Gelati -->
         <div class="container">
             <div class="col-md-12 ml-auto mr-auto">
@@ -122,14 +162,54 @@
                         $estensione_img[$counter] = $row['estensione_img'];
                         $counter++;
                     }
-
-                    for($i=0; $i<$counter; $i++){
-                        if($i%5==0) {
-                            echo "</div>";
-                            echo "<div class='row'>";
-                        } 
+                        $count = 0;
+                        for($i=0; $i<$counter; $i++){
                         
-                    
+                        echo "
+                        
+                            <div class='col-lg-3 col-md-6 col-sm-6 mb-4'>
+                                <div class='card'>
+                                    <img class='card-img-top' src='https://gestionalepolaris.com/immagini_gelati/$array_nomi[$i].$estensione_img[$i]' alt='Card image cap'>
+                                    <div class='card-body'>
+                                        <h4 class='card-title'>$array_nomi[$i]</h4>
+                                        <p class='card-text'>$array_text[$i]</p>
+                                        <button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal$count'>
+                                        Info
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        ";
+
+                        //modal
+                        echo '
+                        
+                            <div class="modal fade" id="exampleModal'.$count.'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">'.$array_nomi[$i].'</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Ingredienti: '.trova_ingredienti($array_nomi[$i]).' <br>
+                                    Allergeni: '.trova_allergeni($array_nomi[$i]).'
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Nope</button>
+                                    <button type="button" class="btn btn-primary">Yep</button>
+                                </div>
+                                </div>
+                            </div>
+                            </div> 
+                        
+                        
+                        ';
+
+                        $count++;
 
                     }
                 ?>
@@ -137,8 +217,12 @@
                 </div>
             </div>
         </div>
-        <!-- / Gelati -->
     </div>
+
+    
+
+    <!-- Modal -->
+    
 
     <!-- Optional JavaScript -->
     <!-- JavaScript Dependencies: jQuery, Popper.js, Bootstrap JS, Shards JS -->

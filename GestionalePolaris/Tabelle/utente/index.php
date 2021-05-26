@@ -1,6 +1,11 @@
 <?php
     require 'C:/xampp/htdocs/Elaborato/GestionalePolaris/config.php';
     require 'C:/xampp/htdocs/Elaborato/GestionalePolaris/verifica_session.php';
+
+    if (!$_SESSION['ruolo']){
+        header("Location: $GLOBALS[domain_login]");
+        exit;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -18,8 +23,8 @@
     <h3>Inserisci un nuovo Account</h3>
     <form action="inserimento_Account.php" method="POST">
         nome<input maxlength="30" type="text" name="nome" required/>
-        password<input maxlength="30" type="password" name="pwd" required/>
-        conferma password<input maxlength="30" type="password" name="pwd_verifica" required/>
+        password<input type="password" inpupt maxlength="30"  name="pwd" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" required/>
+        conferma password<input type="password" inpupt maxlength="30"  name="pwd_verifica" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" required/>
         Amministratore?
             <input type="checkbox" value="true" name="ruolo">
             <label for="ruolo">Si</label>
