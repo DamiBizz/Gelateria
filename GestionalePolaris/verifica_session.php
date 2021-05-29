@@ -2,6 +2,7 @@
     require 'C:/xampp/htdocs/Elaborato/GestionalePolaris/config.php';
 
 
+    /*
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
       }
@@ -15,5 +16,6 @@
         header("Location: $GLOBALS[domain_login]");
         exit;
     }
+    */
         
 ?>
