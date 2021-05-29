@@ -53,6 +53,7 @@
 
             }
         }
+        
     ?>
 
     <br><br><br>
@@ -65,13 +66,22 @@
         <select class="mul-select" multiple="true" name="Prodotto[]"> <?php select('nome', 'prodotto'); ?> </select>Prodotto <br>
         <select class="mul-select" multiple="true" name="Ingrediente[]"> <?php select_ingrediente('nome', 'ingrediente'); ?></select>Ingrediente <br>
         <select class="mul-select" multiple="true" name="Allergene[]"> <?php select('nome', 'allergene'); ?> </select>Allergene <br>
-        <input type="submit" value="Ricerca" /> 
+        <input type="submit" value="Ricerca" />
     </form>
 
+    <br><br><br>
+    <form action="Select/ricerca_tutto.php" method="POST">
+        <input type="hidden" name="selezione_tutto1258251351344" value='true'>
+        <input type="submit" value="Ricerca tutti i gusti" />
+    </form>
+
+
+    
+    <br><br><br>
     <?php
         //se è un'amministratore
         if($_SESSION['ruolo'] == true){ ?>
-            <br><br><br><a href="Tabelle/utente/"><button>Gestisci gli account</button></a>
+            <a href="Tabelle/utente/"><button>Gestisci gli account</button></a>
     <?php
         }
     ?>

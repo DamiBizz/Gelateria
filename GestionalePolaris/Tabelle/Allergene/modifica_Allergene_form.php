@@ -1,6 +1,9 @@
 <?php
     require 'C:/xampp/htdocs/Elaborato/GestionalePolaris/config.php';
     require 'C:/xampp/htdocs/Elaborato/GestionalePolaris/verifica_session.php';
+
+    header("Location: $GLOBALS[domain_login]");
+    exit;
 ?>
 
 <!DOCTYPE html>
