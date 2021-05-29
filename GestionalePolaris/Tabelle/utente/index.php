@@ -52,7 +52,8 @@
             while ($row=$result->fetch_assoc()) {
                 echo "<tr>";
                 echo "<td>".$row["nome"]."</td>";
-                echo "<td>".$row["ruolo"]."</td>";
+                if($row['ruolo'] == 1) echo "<td>".'<img width="20px" height="20px" src="../../../Images/Verde.png"></img>'."</td>";
+                if($row['ruolo'] == 0) echo "<td>".'<img width="20px" height="20px" src="../../../Images/Rosso.png"></img>'."</td>";
                 echo "<td>" . '<form onsubmit="return confirm('."'Sei sicuro/a di cancellare la riga?'".');" action="../delete_row.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="utente" name="tabella"/>

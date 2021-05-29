@@ -65,8 +65,8 @@
     <table border="1">
 
         <tr>
-            <th>nome</a></th>
-            <th>Disponibile?</th>
+            <th></a></th>
+            <th>nome</th>
             <th>Immagine</th>
             <th>Ingrediente</th>
             <th>Text</th>
@@ -83,8 +83,9 @@
 
             while ($row=$result->fetch_assoc()) {
                 echo "<tr>";
+                if($row['disponibile'] == 1) echo "<td>".'<img width="20px" height="20px" src="../../../Images/Verde.png"></img>'."</td>";
+                if($row['disponibile'] == 0) echo "<td>".'<img width="20px" height="20px" src="../../../Images/Rosso.png"></img>'."</td>";
                 echo "<td>".$row["nome"]."</td>";
-                echo "<td>".$row["disponibile"]."</td>";
                 $supp = $GLOBALS['domain_cartella_img_gelati'].$row["nome"].".".$row["estensione_img"];
                 echo "<td>".'<img width="50px" height="50px" src="'.$supp.'"></img>'."</td>";
 
