@@ -1,42 +1,46 @@
-<?php
-    require 'C:/xampp/htdocs/Elaborato/GestionalePolaris/config.php';
-
-        session_start();
-
-        if (isset($_SESSION['utente'])){
-            header("Location: /index.php");
-            exit;
-        }
-    ?>
-
 <!DOCTYPE html>
+<html>
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-
     <title>Login</title>
+    <link href="stile.css" rel="stylesheet" type="text/css">
     <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-
 </head>
 <body>
-    <br /> <br />
-    <div class="container">
-    <div class="row">
-        <div class="col-sm">
-            <form action="verifica.php" method="POST">
-                <div class="g-recaptcha" data-sitekey="6LfpkdEaAAAAAFBBvOvNyYNBnZqua-1HE_ovFd9d"></div>
-                <div>
-                <label for="exampleInputEmail1" class="form-label">Utente</label>
-                    <input type="text" name="utente" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                <div class="mb-3">
-                    
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" name="pwd" class="form-control" id="exampleInputPassword1">
 
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+
+
+  <div class="cont">
+    <div class="demo">
+        <div class="login">
+          <div class="login__check"></div>
+          <div class="login__form">
+
+            <form action="verifica.php" method="POST">
+              <div class="g-recaptcha" data-sitekey="6LfpkdEaAAAAAFBBvOvNyYNBnZqua-1HE_ovFd9d"></div>
+              <div class="login__row">
+                <svg class="login__icon name svg-icon" viewBox="0 0 20 20">
+                  <path d="M0,20 a10,8 0 0,1 20,0z M10,0 a4,4 0 0,1 0,8 a4,4 0 0,1 0,-8" />
+                </svg>
+                <input type="text" name="utente" class="login__input name" placeholder="Username"/>
+              </div>
+              <div class="login__row">
+                <svg class="login__icon pass svg-icon" viewBox="0 0 20 20">
+                  <path d="M0,20 20,20 20,8 0,8z M10,13 10,16z M4,8 a6,8 0 0,1 12,0" />
+                </svg>
+                <input type="password" name="pwd" class="login__input pass" placeholder="Password"/>
+              </div>
+              <button type="submit" class="login__submit">Accedi</button>
             </form>
+
+            
+          </div>
         </div>
+    </div>
   </div>
+
+  
+
+ 
+
 </body>
 </html>
