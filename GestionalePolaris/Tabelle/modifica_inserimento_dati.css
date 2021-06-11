@@ -1,0 +1,35 @@
+body {
+    background-color: lightblue;
+}
+
+form{
+    text-align: center;
+    padding: 30px;
+    background-color: rgb(1, 146, 156);
+}
+
+.input_text {
+    position: relative;
+    width: 50%;
+    
+}
+
+input{
+    height: 20px;
+    text-align: center;
+}
+
+.option {
+    margin: 100px;
+}
+
+.titolo_sopra_tabella {
+    text-align: center;
+    color: black;
+}
+
+.immagine{
+    border:0px;
+    width: 100px;
+    height: 100px;
+}

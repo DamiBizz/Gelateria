@@ -25,7 +25,7 @@
         include 'index.php';
     }
 
-    if(isset($_POST['pwd'])){
+    if(!empty($_POST['pwd'])){
         if($_POST['pwd'] != $_POST['pwd_verifica']){
             ?><script>alert("Password sbagliata !!!");</script><?php
              include 'index.php';

@@ -11,21 +11,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../modifica_inserimento_dati.css">
     <title>Modifica Account</title>
 </head>
 <body>
-    <a href="index.php"><button>Torna indietro</button></a>
+
+    <a class="torna_indietro" href="index.php">
+        <img width="60px" height="31px" src="../../../Images/back.png"></img>
+    </a>
 
     <form action="modifica_Account.php" method="POST">
         <input type="hidden" value="<?php echo $_POST['ID']?>" name="ID">
-        nome<input maxlength="30" type="text" name="nome" value="<?php echo $_POST['nome']?>" required/><br />
-        password<input type="password" inpupt maxlength="30"  name="pwd" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" required/>
-        conferma password<input type="password" inpupt maxlength="30"  name="pwd_verifica" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" required/>
-        Amministratore?
+        <input maxlength="30" type="text" name="nome" value="<?php echo $_POST['nome']?>" required/><br />
+        <br>Modifica Password:  <input type="password" inpupt maxlength="30"  name="pwd" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$"/>
+        <br><br>Conferma password:  <input type="password" inpupt maxlength="30"  name="pwd_verifica" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$"/>
+        <br><br>Amministratore?
         <input type="checkbox" value="true" name="ruolo" <?php if($_POST['ruolo']==1) echo "checked"; ?>>
             <label for="ruolo">Si</label>
-        <input type="submit" value="Conferma" />
+        
+            <br><br><input type="image" class="immagine" name="submit" src="../../../Images/conferma.png"  alt="Submit"/>
     </form>
 
 </body>

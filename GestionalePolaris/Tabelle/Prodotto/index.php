@@ -8,68 +8,35 @@
 <head>
     <!-- bootstrap Lib -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../tabelle.css">
 
-    <!-- per la selezione multipla -->
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
     <title>Prodotto</title>
 </head>
 <body>
-    <!---------------Funzione select, visualizza le varie opzioni------------------>
-    <?php 
-        function select($name, $tabella){
-            include "$GLOBALS[connessione_db]";
-            
-            $sql = "SELECT DISTINCT $name,ID FROM $tabella ORDER BY $name";
-            $result = $conn->query($sql);
-            while($row = $result->fetch_assoc())
-            {
-                $var = $row["ID"];
-                echo "<option name='$row[$name]' value = '$var' > $row[$name] </option>";
-            }
-        }
-    ?>
+
+    <a class="torna_indietro" href="<?php echo $GLOBALS['domain_home']?>">
+        <img width="60px" height="31px" src="../../../Images/back.png"></img>
+    </a>
+
+    <div class="text-center">
+        <a href="inserimento_Prodotto_form.php" value="Inseriesci un nuovo prodotto">
+            <img width="60px" height="60px" src="../../../Images/add_file.jpg"></img>
+        </a>
+    </div>
     
-    <a href="<?php echo $GLOBALS['domain_home']?>"><button>Torna indietro</button></a>
-
-    <!-- pulsante per l'inserimento di un nuovo PRODOTTO -->
-    <h3>Inserisci un nuovo Prodotto</h3>
-    <form action="inserimento_Prodotto.php" method="POST" enctype="multipart/form-data">
-        nome Prodotto<input maxlength="60" type="text" name="nome" required/> <br>
-
-        Disponibile atttualemente? 
-            <input type="checkbox" value="true" name="disponibile">
-            <label for="disponibile">Si</label>
-
-        <br>
-        immagine<input type="file" name="immagine" required/> <br>
-        <!-- inserire la relazione con la tabella ingrediente -->
-        Ingredienti: <select class="mul-select" multiple="true" name="IDIngrediente[]"> <?php select('nome', 'ingrediente'); ?> </select>
-        Text: <input maxlength="500" type="text" name="text"/> <br>
-        <input type="submit" value="Conferma" />
-    </form>
-
-    <script>
-        $(".mul-select").select2({
-            placeholder: "Seleziona Ingredienti",
-            tags: true,
-            tokenSeparators: ['/',',',';'," "] 
-        });
-    </script>
 
     <!-- -------------------------------------------------------------------- -->
 
     <!-- stampa la tabella con la possiblità di modificare ed eliminare un singolo campo -->
-    <h3>Tabella dati inseriti</h3>
-    <table border="1">
+    <h3 class="titolo_sopra_tabella">GELATI</h3>
+    <table id="tabelle">
 
         <tr>
-            <th></a></th>
-            <th>nome</th>
-            <th>Immagine</th>
-            <th>Ingrediente</th>
-            <th>Text</th>
+            <th></th>
+            <th>Nome</th>
+            <th></th>
+            <th>Ingredienti</th>
+            <th>Descrizione</th>
             <th></th>
             <th></th>
         </tr>
@@ -83,8 +50,8 @@
 
             while ($row=$result->fetch_assoc()) {
                 echo "<tr>";
-                if($row['disponibile'] == 1) echo "<td>".'<img width="20px" height="20px" src="../../../Images/Verde.png"></img>'."</td>";
-                if($row['disponibile'] == 0) echo "<td>".'<img width="20px" height="20px" src="../../../Images/Rosso.png"></img>'."</td>";
+                if($row['disponibile'] == 1) echo "<td>".'<img width="25px" height="25px" src="../../../Images/Verde.png"></img>'."</td>";
+                if($row['disponibile'] == 0) echo "<td>".'<img width="25px" height="25px" src="../../../Images/Rosso.png"></img>'."</td>";
                 echo "<td>".$row["nome"]."</td>";
                 $supp = $GLOBALS['domain_cartella_img_gelati'].$row["nome"].".".$row["estensione_img"];
                 echo "<td>".'<img width="50px" height="50px" src="'.$supp.'"></img>'."</td>";
@@ -113,10 +80,11 @@
                                     <input type="hidden" value="'.$row['nome'].'" name="nome"/>
                                     <input type="hidden" value="'.$row['estensione_img'].'" name="estensione_img"/>
                                     <input type="hidden" value="prodotto" name="tabella"/>
-                                    <button type="submit">
-                                        <img width="24px" height="24px" src="../../../Images/delete.png"></img>
-                                    </button>
+
+                                    <input type="image" name="submit" src="../../../Images/delete.png" border="0" width="45px" height="45px" alt="Submit"/>
+
                                 </form>' . "</td>";
+
                 echo "<td>" . '<form action="modifica_Prodotto_form.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="'.$row['nome'].'" name="nome"/>
@@ -124,9 +92,7 @@
                                     <input type="hidden" value="'.$row['disponibile'].'" name="disponibile"/>
                                     <input type="hidden" value="'.$row['text'].'" name="text"/>
                                     <input type="hidden" value="'.$supp.'" name="nomeIngrediente"/>
-                                    <button type="submit">
-                                        <img width="24px" height="24px" src="../../../Images/edit.png"></img>
-                                    </button>
+                                    <input type="image" name="submit" src="../../../Images/edit.png" border="0" width="40px" height="40px" alt="Submit"/>
                                 </form>' . "</td>";
                 echo "</tr>";
             }

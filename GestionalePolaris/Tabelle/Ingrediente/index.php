@@ -7,46 +7,33 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">    
+    <link rel="stylesheet" href="../tabelle.css">
+    
     <title>Ingrediente</title>
 </head>
 <body>
 
-    <!---------------Funzione select, visualizza le varie opzioni------------------>
-    <?php 
-        function select($name, $tabella){
-            include "$GLOBALS[connessione_db]";
-                
-            $sql = "SELECT DISTINCT $name,ID FROM $tabella ORDER BY $name";
-            $result = $conn->query($sql);
-            echo "<option></option>";
-            while($row = $result->fetch_assoc()){ 
-                $var = $row["ID"];
-                    echo "<option name='$row[$name]' value = '$var' > $row[$name] </option>";
-                }
-            }
-    ?>
     
-    <a href="<?php echo $GLOBALS['domain_home']?>"><button>Torna indietro</button></a>
+    
+    <a class="torna_indietro" href="<?php echo $GLOBALS['domain_home']?>">
+        <img width="60px" height="31px" src="../../../Images/back.png"></img>
+    </a>
 
-    <!-- pulsante per l'inserimento di un nuovo Ingrediente -->
-    <h3>Inserisci un nuovo Ingrediente</h3>
-    <form action="inserimento_Ingrediente.php" method="POST">
-        nome Ingrediente<input maxlength="40" type="text" name="nome" required/>
-        sigla<input input maxlength="10" type="text" name="sigla"/>
-        
-        <!-- relazione -->
-        Allergene: <select name="IDAllergene"> <?php select('nome', 'allergene'); ?> </select>
-        <input type="submit" value="Conferma" />
-    </form>
+    <div class="text-center">
+        <a href="inserimento_Ingrediente_form.php" value="Inseriesci un nuovo prodotto">
+            <img width="60px" height="60px" src="../../../Images/add_file.jpg"></img>
+        </a>
+    </div>
+    
 
     <!-- stampa la tabella con la possiblità di modificare ed eliminare un singolo campo -->
-    <h3>Tabella</h3>
-    <table border="1">
+    <h3 class="titolo_sopra_tabella">INGREDIENTI</h3>
+    <table id="tabelle">
 
         <tr>
             <th>nome</th>
             <th>sigla</th>
-            <th>IDAllergene</th>
+            <th>Allergene</th>
             <th></th>
             <th></th>
         </tr>
@@ -77,18 +64,16 @@
                 echo "<td>" . '<form onsubmit="return confirm('."'Sei sicuro/a di cancellare la riga?'".');" action="../delete_row.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="ingrediente" name="tabella"/>
-                                    <button type="submit">
-                                        <img width="24px" height="24px" src="../../../Images/delete.png"></img>
-                                    </button>
+                                    <input type="image" name="submit" src="../../../Images/delete.png" border="0" width="45px" height="45px" alt="Submit"/>
+
                                 </form>' . "</td>";
                 echo "<td>" . '<form action="modifica_Ingrediente_form.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="'.$row['nome'].'" name="nome"/>
                                     <input type="hidden" value="'.$row['sigla'].'" name="sigla"/>
                                     <input type="hidden" value="'.$row['IDAllergene'].'" name="IDAllergene"/>
-                                    <button type="submit">
-                                        <img width="24px" height="24px" src="../../../Images/edit.png"></img>
-                                    </button>
+                                    <input type="image" name="submit" src="../../../Images/edit.png" border="0" width="40px" height="40px" alt="Submit"/>
+
                                 </form>' . "</td>";
                 echo "</tr>";
             }

@@ -7,13 +7,19 @@
 <html>
 <head>
     <title>Selezione</title>
+    <link rel="stylesheet" href="../Tabelle/tabelle.css">
 </head>
 
-    <a href="<?php echo $GLOBALS['domain_home']?>"><button>Torna indietro</button></a>
+    <a class="torna_indietro" href="<?php echo $GLOBALS['domain_home']?>">
+        <img width="60px" height="31px" src="../../../Images/back.png"></img>
+    </a>
+
+    
 
     <?php 
         include "$GLOBALS[connessione_db]";
-        echo "<table border='1'> 
+
+        echo '<table id="tabelle">
                 <thead>
                     <th></th>
                     <th></th>
@@ -22,58 +28,73 @@
                     <th>allergene</th>
                 </thead>    
 
-                <tbody>";
+                <tbody> ';
 
                     
         //----------------------------------ATTRIBUTI--------------------------------------------------------
         //nome Prodotto
-        $n_prodotto = 1;
-        $stringa_nome_prodotto = "";
         if(!empty($_POST['Prodotto'])){
-            $n_prodotto = count($_POST['Prodotto']);
             $prodotto = $_POST['Prodotto'];    
         }
         
         //nome ingrediente
         $stringa_nome_ingrediente = "";
         if(!empty($_POST['Ingrediente'])){
-            $n_ingrediente = count($_POST['Ingrediente']);
             $ingrediente = $_POST['Ingrediente'];
-            for($i = 0; $i<$n_ingrediente; $i++){
-                if(empty($stringa_nome_ingrediente)) $stringa_nome_ingrediente .= " AND '$ingrediente[$i]' = ingrediente.nome";
-                else $stringa_nome_ingrediente .= " OR '$ingrediente[$i]' = ingrediente.nome";
-            }    
+            $stringa_nome_ingrediente = " AND '$ingrediente' = ingrediente.nome";
         }
 
         //nome allergene
         $stringa_nome_allergene = "";
         if(!empty($_POST['Allergene'])){
-            $n_allergene = count($_POST['Allergene']);
             $allergene = $_POST['Allergene'];
-            for($i = 0; $i<$n_allergene; $i++){
-                if(empty($stringa_nome_allergene)) $stringa_nome_allergene .= " AND '$allergene[$i]' = allergene.nome";
-                else $stringa_nome_allergene .= " OR '$allergene[$i]' = allergene.nome";
-            }    
+            $stringa_nome_allergene = " AND '$allergene' = allergene.nome";
         }
 
+        //disponibile o meno
         $disp = "";
-        if(!empty($_POST['disponibile'])){
-            if($_POST['disponibile'] == "true") $disp= " AND disponibile = 1";
-            else if($_POST['disponibile'] == "false") $disp= " AND disponibile = 0";
-        }
+        if(!empty($_POST['true']) && empty($_POST['false'])) $disp= " AND disponibile = 1";
+        if(empty($_POST['true']) && !empty($_POST['false'])) $disp= " AND disponibile = 0";
         
-        
-        //se il nome è selezionato
-        if (!empty($_POST['Prodotto'])){
-            for($i = 0; $i<$n_prodotto; $i++){
 
-                $nome = $prodotto[$i];
-                        
-                //prodotto
-                $sql = "SELECT DISTINCT nome, estensione_img, disponibile
-                            FROM prodotto
-                            WHERE nome = '$nome'".$disp;
-    
+        //-----------------------------------------CONDIZIONII-------------------------------------
+        if(empty($prodotto) && empty($ingrediente) && empty($allergene) && empty($_POST['true']) && empty($_POST['false'])){ //errore
+            echo "seleziona qualcosa";
+        }
+
+        //se il nome è selezionato
+        else if (!empty($_POST['Prodotto'])){
+
+                $nome = $prodotto;
+
+                if(!empty($prodotto) && empty($ingrediente) && empty($allergene)){
+                    $sql = "SELECT DISTINCT prodotto.nome, prodotto.estensione_img, prodotto.disponibile
+                        FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                        WHERE prodotto.nome = '$nome'".$disp;
+                }
+                if(!empty($prodotto) && !empty($ingrediente) && empty($allergene)){
+                    $sql = "SELECT DISTINCT prodotto.nome, prodotto.estensione_img, prodotto.disponibile
+                        FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                        WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                        AND prodotto.nome = '$nome'".$disp.$stringa_nome_ingrediente;
+                }
+                if(!empty($prodotto) && !empty($ingrediente) && !empty($allergene)){
+                    $sql = "SELECT DISTINCT prodotto.nome, prodotto.estensione_img, prodotto.disponibile
+                        FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                        WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                        AND allergene.ID IN (SELECT allergene.ID FROM allergene, ingrediente WHERE ingrediente.IDAllergene = allergene.ID $stringa_nome_allergene)
+                        AND prodotto.nome = '$nome'".$disp.$stringa_nome_ingrediente;
+                }
+                if(!empty($prodotto) && empty($ingrediente) && !empty($allergene)){
+                    $sql = "SELECT DISTINCT prodotto.nome, prodotto.estensione_img, prodotto.disponibile
+                        FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                        WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                        AND ingrediente.IDAllergene = allergene.ID
+                        AND prodotto.nome = '$nome'".$disp.$stringa_nome_ingrediente.$stringa_nome_allergene;
+                }
+
+                $flag = false;
+
                 $result = $conn->query($sql);
     
                 while($row = $result->fetch_assoc()) { 
@@ -83,13 +104,19 @@
                     $supp = $GLOBALS['domain_cartella_img_gelati'].$row["nome"].".".$row["estensione_img"];
                     echo "<td>".'<img width="50px" height="50px" src="'.$supp.'"></img>'."</td>";
                     echo "<td>".$row['nome']."</td>";
+                    $flag=true;
+                }
+
+                if(!$flag){
+                    echo "Nessun gelato trovato!!";
+                    exit;
                 }
             
                 //ingredienti
                 $sql = "SELECT DISTINCT ingrediente.nome, ingrediente.sigla
                             FROM ingrediente, prodotto_ingrediente, prodotto
                             WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
-                            AND Prodotto.nome = '$nome'".$disp.$stringa_nome_ingrediente;
+                            AND Prodotto.nome = '$nome'";
                 
     
                 $result = $conn->query($sql);
@@ -99,10 +126,7 @@
                     if($row['sigla']!="") $supporto = $row['nome'] . " (".$row['sigla'].")";
                     else $supporto = $row['nome'];
     
-                    echo "<form action='ingrediente.php' method='POST'>
-                        <input type='hidden' name='nome_ingrediente' value = '$row[nome]' />
-                        <input type='submit' name='nome_sigla_ingrediente' title='allergene associato' value='$supporto'/>
-                    </form>";
+                    echo $supporto."<br>";
                 } 
                 echo "</td>";
     
@@ -112,139 +136,243 @@
                             FROM allergene, ingrediente, prodotto_ingrediente, prodotto
                             WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
                             AND ingrediente.IDAllergene = allergene.ID
-                            AND Prodotto.nome = '$nome'".$disp.$stringa_nome_allergene;
+                            AND Prodotto.nome = '$nome'";
                 
     
                 $result = $conn->query($sql);
     
                 echo "<td>";
                 while ($row = $result->fetch_assoc()) {
-                    echo "<form action='allergene.php' method='POST'>
-                    <input type='submit' name='allergene_nome' title='allergene associato' value='$row[nome]'/>
-                </form>";
+                    echo $row['nome']."<br>";
                 } 
                 echo "</td>";
                 echo "<tr>";
-            }
         }
 
-
-        //se il nome non è selezionato
-        if (empty($_POST['Prodotto'])){
-
-                $Array_prodotto = NULL;
-                $counter = 0;
-
-                if($disp == "" && $stringa_nome_ingrediente == "" && $stringa_nome_allergene == ""){
-                    ?><script> alert("Seleziona qualcosa!!!"); </script><?php
-                    die();
-                }
-                else if($disp == "" && $stringa_nome_ingrediente == "" && $stringa_nome_allergene != ""){
-                    $sql = "SELECT DISTINCT prodotto.nome
-                            FROM prodotto, ingrediente, allergene, prodotto_ingrediente
-                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
-                            AND ingrediente.IDAllergene = allergene.ID".$stringa_nome_allergene;
-                }
-                else if($disp == "" && $stringa_nome_ingrediente != "" && $stringa_nome_allergene == ""){
-                    $sql = "SELECT DISTINCT prodotto.nome
-                            FROM prodotto, ingrediente, allergene, prodotto_ingrediente
-                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
-                            ".$stringa_nome_ingrediente;
-                }
-                else if($disp == "" && $stringa_nome_ingrediente != "" && $stringa_nome_allergene != ""){
-                    $sql = "SELECT DISTINCT prodotto.nome
-                            FROM prodotto, ingrediente, allergene, prodotto_ingrediente
-                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
-                            AND ingrediente.IDAllergene = allergene.ID".$stringa_nome_ingrediente.$stringa_nome_allergene;
-                }
-                else if($disp != "" && $stringa_nome_ingrediente == "" && $stringa_nome_allergene == ""){
-                    $sql = "SELECT DISTINCT prodotto.nome
-                            FROM prodotto, ingrediente, allergene, prodotto_ingrediente
-                            WHERE 1=1".$disp;
-                }
-                else if($disp != "" && $stringa_nome_ingrediente == "" && $stringa_nome_allergene != ""){
-                    $sql = "SELECT DISTINCT prodotto.nome
-                            FROM prodotto, ingrediente, allergene, prodotto_ingrediente
-                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
-                            AND ingrediente.IDAllergene = allergene.ID".$disp.$stringa_nome_allergene;
-                }
-                else if($disp != "" && $stringa_nome_ingrediente != "" && $stringa_nome_allergene == ""){
-                    $sql = "SELECT DISTINCT prodotto.nome
-                            FROM prodotto, ingrediente, allergene, prodotto_ingrediente
-                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
-                            ".$disp.$stringa_nome_ingrediente;
-                }
-                else if($disp != "" && $stringa_nome_ingrediente != "" && $stringa_nome_allergene != ""){
-                    $sql = "SELECT DISTINCT prodotto.nome
-                            FROM prodotto, ingrediente, allergene, prodotto_ingrediente
-                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
-                            AND ingrediente.IDAllergene = allergene.ID".$disp.$stringa_nome_ingrediente.$stringa_nome_allergene;
-                }
+        //se selezionato è solo disp
+        else if (empty($_POST['Prodotto']) && empty($ingrediente) && empty($allergene) && !empty($disp)){
+            
+            $sql5 = "SELECT DISTINCT nome
+                        FROM prodotto 
+                        WHERE 1=1" .$disp;
+            $result5 = $conn->query($sql5);
+            while($row5 = $result5->fetch_assoc()) {
+                //prodotto
+                $sql = "SELECT DISTINCT nome, estensione_img, disponibile
+                            FROM prodotto 
+                            WHERE prodotto.nome = '$row5[nome]'
+                        ";
 
                 $result = $conn->query($sql);
 
                 while($row = $result->fetch_assoc()) { 
-                    $Array_prodotto[$counter] = $row['nome'];
-                    $counter++;
+                echo "<tr>";
+                if($row['disponibile'] == 1) echo "<td>".'<img width="20px" height="20px" src="../../Images/Verde.png"></img>'."</td>";
+                if($row['disponibile'] == 0) echo "<td>".'<img width="20px" height="20px" src="../../Images/Rosso.png"></img>'."</td>";
+                $supp = $GLOBALS['domain_cartella_img_gelati'].$row["nome"].".".$row["estensione_img"];
+                echo "<td>".'<img width="50px" height="50px" src="'.$supp.'"></img>'."</td>";
+                echo "<td>".$row['nome']."</td>";
+                }
+
+                //ingredienti
+                $sql = "SELECT DISTINCT ingrediente.nome, ingrediente.sigla
+                            FROM ingrediente, prodotto_ingrediente, prodotto
+                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                            AND prodotto.nome = '$row5[nome]'
+                        ";
+
+                $result = $conn->query($sql);
+
+                echo "<td>";
+                while ($row = $result->fetch_assoc()) {
+                if($row['sigla']!="") $supporto = $row['nome'] . " (".$row['sigla'].")";
+                else $supporto = $row['nome'];
+
+                echo $supporto."<br>";
 
                 }
+                echo "</td>";
+
+
+                //Allergene
+                $sql = "SELECT DISTINCT allergene.nome
+                            FROM allergene, ingrediente, prodotto_ingrediente, prodotto
+                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                            AND ingrediente.IDAllergene = allergene.ID
+                            AND prodotto.nome = '$row5[nome]'
+                        ";
+
+
+                $result = $conn->query($sql);
+
+                
+                echo "<td>";
+                while ($row = $result->fetch_assoc()) {
+                    echo $row['nome']."<br>";
+                }
+                echo "</td>";
+                echo "<tr>";    
+            }
+        }
+        
+        //gli altri casi
+        else if (empty($_POST['Prodotto'])){
+
+            if(empty($prodotto) && empty($ingrediente) && !empty($allergene)){ //OK
+                $sql = "SELECT DISTINCT prodotto.nome
+                    FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                    WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                    AND ingrediente.IDAllergene = allergene.ID"
+                    .$disp.$stringa_nome_ingrediente.$stringa_nome_allergene;
+
+                $Array_prodotto = NULL;
+                $counter = 0;
+                $result = $conn->query($sql);
+                while($row = $result->fetch_assoc()) { 
+                    $Array_prodotto[$counter] = $row['nome'];
+                    $counter++;
+                }
+            }
+
+            else if(empty($prodotto) && !empty($ingrediente) && empty($allergene)){ //OK
+                $sql = "SELECT DISTINCT prodotto.nome
+                    FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                    WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID"
+                    .$disp.$stringa_nome_ingrediente.$stringa_nome_allergene;
+
+                $Array_prodotto = NULL;
+                $counter = 0;
+                $result = $conn->query($sql);
+                while($row = $result->fetch_assoc()) { 
+                    $Array_prodotto[$counter] = $row['nome'];
+                    $counter++;
+                }
+            }
+            
+            else if(empty($prodotto) && !empty($ingrediente) && !empty($allergene)){ //NO
+                $sql = "SELECT DISTINCT prodotto.nome
+                    FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                    WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID"
+                    .$disp.$stringa_nome_ingrediente;
+                
+                    //trovo i nome degli ingredienti
+                    $Array_prodotto_prima = NULL;
+                    $counter_prima = 0;
+                    $result = $conn->query($sql);
+                    while($row = $result->fetch_assoc()) { 
+                        $Array_prodotto_prima[$counter_prima] = $row['nome'];
+                        $counter_prima++;
+                    }
+
+                    
+
+                    for($i=0; $i<$counter_prima; $i++){
+
+                        $nome = $Array_prodotto_prima[$i];
+                        $flag = false;
+
+                        $sql = "SELECT DISTINCT prodotto.nome
+                            FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                            AND ingrediente.IDAllergene = allergene.ID
+                            AND Prodotto.nome = '$nome'"
+                            .$stringa_nome_allergene;
+                        
+                            $Array_prodotto = NULL;
+                            $counter = 0;
+                            $result = $conn->query($sql);
+                            while($row = $result->fetch_assoc()) { 
+                                $Array_prodotto[$counter] = $row['nome'];
+                                $counter++;
+                            }
+
+                            /*for($i=0; $i<$counter; $i++){
+                                echo "$i --> $Array_prodotto[$i]";
+                            }*/
+                    }
+            }
+
+            
+                //--------------------------------------------------------------------------------------------------------------------------------
 
                 for($i=0; $i<$counter; $i++){
 
                     $nome = $Array_prodotto[$i];
+                    $flag = false;
+
+                    //opzioni
+                    if(empty($prodotto) && empty($ingrediente) && !empty($allergene)){
+                        $sql = "SELECT DISTINCT prodotto.nome, prodotto.estensione_img, prodotto.disponibile
+                            FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                            WHERE ingrediente.IDAllergene = allergene.ID
+                            AND Prodotto.nome = '$nome'"
+                            .$disp.$stringa_nome_ingrediente.$stringa_nome_allergene;
+                    }
+                    else if(empty($prodotto) && !empty($ingrediente) && empty($allergene)){
+                        $sql = "SELECT DISTINCT prodotto.nome, prodotto.estensione_img, prodotto.disponibile
+                            FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                            AND Prodotto.nome = '$nome'"
+                            .$disp.$stringa_nome_ingrediente.$stringa_nome_allergene;
+                    }
+                    else if(empty($prodotto) && !empty($ingrediente) && !empty($allergene)){
+                        $sql = "SELECT DISTINCT prodotto.nome, prodotto.estensione_img, prodotto.disponibile
+                            FROM ingrediente, prodotto_ingrediente, prodotto, allergene
+                            WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                            AND allergene.ID IN (SELECT allergene.ID FROM allergene, ingrediente WHERE ingrediente.IDAllergene = allergene.ID $stringa_nome_allergene)
+                            AND prodotto.nome = '$nome'".$disp.$stringa_nome_ingrediente;
+                    }
                     
-                    //prodotto
-                    $sql = "SELECT DISTINCT nome, estensione_img, disponibile
-                            FROM prodotto
-                            WHERE prodotto.nome = '$nome'";
 
                     $result = $conn->query($sql);
-
+        
                     while($row = $result->fetch_assoc()) { 
                         echo "<tr>";
-                            if($row['disponibile'] == 1) echo "<td>".'<img width="20px" height="20px" src="../../Images/Verde.png"></img>'."</td>";
-                            if($row['disponibile'] == 0) echo "<td>".'<img width="20px" height="20px" src="../../Images/Rosso.png"></img>'."</td>";
-                            echo "<td>".'<img width="40px" height="40px" src="../../Immagini_Gelati/'.$row["nome"].'.'.$row["estensione_img"].'"></img>'."</td>";
-                            echo "<td>".$row['nome']."</td>";
+                        if($row['disponibile'] == 1) echo "<td>".'<img width="20px" height="20px" src="../../Images/Verde.png"></img>'."</td>";
+                        if($row['disponibile'] == 0) echo "<td>".'<img width="20px" height="20px" src="../../Images/Rosso.png"></img>'."</td>";
+                        $supp = $GLOBALS['domain_cartella_img_gelati'].$row["nome"].".".$row["estensione_img"];
+                        echo "<td>".'<img width="50px" height="50px" src="'.$supp.'"></img>'."</td>";
+                        echo "<td>".$row['nome']."</td>";
+                        $flag=true;
                     }
 
+                    if(!$flag){
+                        echo "<br><br>Nessun gelato trovato!!";
+                        exit;
+                    }
+                
                     //ingredienti
                     $sql = "SELECT DISTINCT ingrediente.nome, ingrediente.sigla
-                    FROM ingrediente, prodotto_ingrediente, prodotto
-                    WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
-                    AND Prodotto.nome = '$nome'".$disp.$stringa_nome_ingrediente;
+                                FROM ingrediente, prodotto_ingrediente, prodotto
+                                WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
+                                AND Prodotto.nome = '$nome'";
+                    
         
-
                     $result = $conn->query($sql);
-
+        
                     echo "<td>";
                     while ($row = $result->fetch_assoc()) {
                         if($row['sigla']!="") $supporto = $row['nome'] . " (".$row['sigla'].")";
                         else $supporto = $row['nome'];
-
-                        echo "<form action='ingrediente.php' method='POST'>
-                            <input type='hidden' name='nome_ingrediente' value = '$row[nome]' />
-                            <input type='submit' name='nome_sigla_ingrediente' title='allergene associato' value='$supporto'/>
-                        </form>";
+        
+                        echo $supporto."<br>";
                     } 
                     echo "</td>";
-
-
+        
+        
                     //Allergene
                     $sql = "SELECT DISTINCT allergene.nome
                                 FROM allergene, ingrediente, prodotto_ingrediente, prodotto
                                 WHERE prodotto_ingrediente.IDProdotto = Prodotto.ID AND prodotto_ingrediente.IDIngrediente = Ingrediente.ID
                                 AND ingrediente.IDAllergene = allergene.ID
-                                AND Prodotto.nome = '$nome'".$disp.$stringa_nome_allergene;
+                                AND Prodotto.nome = '$nome'";
                     
-
+        
                     $result = $conn->query($sql);
-
+        
                     echo "<td>";
                     while ($row = $result->fetch_assoc()) {
-                        echo "<form action='allergene.php' method='POST'>
-                        <input type='submit' name='allergene_nome' title='allergene associato' value='$row[nome]'/>
-                    </form>";
+                        echo $row['nome']."<br>";
                     } 
                     echo "</td>";
                     echo "<tr>";
@@ -254,6 +382,8 @@
 
         }
 
+
+       
         echo "</tbody>";
                     
     ?>

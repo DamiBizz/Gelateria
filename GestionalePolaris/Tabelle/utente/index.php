@@ -12,31 +12,29 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../tabelle.css">
+    
     <title>Account</title>
 
 </head>
 <body>
     
-    <a href="<?php echo $GLOBALS['domain_home']?>"><button>Torna indietro</button></a>
+    <a class="torna_indietro" href="<?php echo $GLOBALS['domain_home']?>">
+        <img width="60px" height="31px" src="../../../Images/back.png"></img>
+    </a>
 
-    <!-- pulsante per l'inserimento di un nuovo Allergene -->
-    <h3>Inserisci un nuovo Account</h3>
-    <form action="inserimento_Account.php" method="POST">
-        nome<input maxlength="30" type="text" name="nome" required/>
-        password<input type="password" inpupt maxlength="30"  name="pwd" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" required/>
-        conferma password<input type="password" inpupt maxlength="30"  name="pwd_verifica" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" required/>
-        Amministratore?
-            <input type="checkbox" value="true" name="ruolo">
-            <label for="ruolo">Si</label>
-        <input type="submit" value="Conferma" />
-    </form>
+    <div class="text-center">
+        <a href="inserimento_utente_form.php" value="Inseriesci un nuovo prodotto">
+            <img width="60px" height="60px" src="../../../Images/add_file.jpg"></img>
+        </a>
+    </div>
 
     <!-- stampa la tabella con la possiblità di modificare ed eliminare un singolo campo -->
-    <h3>Tabella</h3>
-    <table border="1">
+    <h3 class="titolo_sopra_tabella">ACCOUNT</h3>
+    <table id="tabelle">
 
         <tr>
-            <th>nome</th>
+            <th>Username</th>
             <th>ruolo</th>
             <th></th>
             <th></th>
@@ -57,17 +55,15 @@
                 echo "<td>" . '<form onsubmit="return confirm('."'Sei sicuro/a di cancellare la riga?'".');" action="../delete_row.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="utente" name="tabella"/>
-                                    <button type="submit">
-                                        <img width="24px" height="24px" src="../../../Images/delete.png"></img>
-                                    </button>
+                                    <input type="image" name="submit" src="../../../Images/delete.png" border="0" width="45px" height="45px" alt="Submit"/>
+
                                 </form>' . "</td>";
                 echo "<td>" . '<form action="modifica_Account_form.php" method="POST">
                                     <input type="hidden" value="'.$row['ID'].'" name="ID"/>
                                     <input type="hidden" value="'.$row['nome'].'" name="nome"/>
                                     <input type="hidden" value="'.$row['ruolo'].'" name="ruolo"/>
-                                    <button type="submit">
-                                        <img width="24px" height="24px" src="../../../Images/edit.png"></img>
-                                    </button>
+                                    <input type="image" name="submit" src="../../../Images/edit.png" border="0" width="40px" height="40px" alt="Submit"/>
+
                                 </form>' . "</td>";
                 echo "</tr>";
             }

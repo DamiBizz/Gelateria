@@ -1,0 +1,62 @@
+body {
+    background-color: lightblue;
+}
+
+#tabelle tr th {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid red;
+    
+}
+#tabelle {
+    margin-left: 5%;
+    width: 90%;
+    border-collapse: collapse;
+}
+
+td {
+    text-align: center;
+}
+
+th {
+    text-align: center;
+}
+
+th, td {
+    border-bottom: 1px solid black;
+    padding: 10px;
+  }
+
+.titolo_sopra_tabella {
+    text-align: center;
+    color: black;
+}
+
+.torna_indietro {
+    padding-top: 10px;
+    padding: 10px;
+}
+
+.button_torna_indietro {
+    background-color: gray;
+    border-color: gray;
+}
+
+#tabelle_INGREDIENTE {
+    margin-left: 10%;
+    width: 50%;
+    border-collapse: collapse;
+}
+
+.submit{
+    align-self: flex-end;
+}
+
+input[type=submit] {
+    background-color:lightblue;
+    border: none;
+    color: rgb(49, 89, 199);
+    text-decoration: underline;
+    margin: 4px 2px;
+    cursor: pointer;
+  }

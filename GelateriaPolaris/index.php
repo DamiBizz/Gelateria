@@ -58,121 +58,12 @@
     <!-- CSS Dependencies -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/shards-ui@latest/dist/css/shards.min.css">
-
-    <style>
-        .landing {
-            position: relative;
-            height: 100vh;
-            min-height: 700px;
-            background: url("./landing.jpg") no-repeat center center fixed;
-            background-size: cover;
-        }
-
-        .landing::before {
-            position: absolute;
-            z-index: 0;
-            content: '';
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: .5;
-            background: #007bff;
-        }
-
-        .logo {
-            height: 28px;
-        }
-
-        .section-title {
-            position: relative;
-        }
-
-        .section-title:after {
-            content: '';
-            width: 30px;
-            height: 2px;
-            background: #007bff;
-            position: absolute;
-            left: 50%;
-            margin-left: -15px;
-            bottom: -20px;
-        }
-
-        .page-content {
-            position: relative;
-            background: #fafafa;
-            padding-top: 5.3125rem;
-        }
-
-        /* The switch - the box around the slider */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-        
-        /* Hide default HTML checkbox */
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        /* The slider */
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-        
-        input:checked + .slider {
-            background-color: #2196F3;
-        }
-        
-        input:focus + .slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
-        
-        input:checked + .slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-        }
-        
-        /* Rounded sliders */
-        .slider.round {
-            border-radius: 34px;
-        }
-        
-        .slider.round:before {
-            border-radius: 50%;
-        }
-    </style>
+    <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <div id="root">
-        <div class="landing d-flex justify-content-center flex-column">
+    <div class="landing d-flex justify-content-center flex-column">
             <div class="container">
                 <nav class="navbar navbar-expand-md navbar-dark">
                     <a class="navbar-brand" href="#">
@@ -185,7 +76,7 @@
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav">
                             <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="">Gelati</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#gelati">Gelati</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Dove siamo</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Contattaci</a></li>
                         </ul>
@@ -212,9 +103,14 @@
         <h3 id="gelati" class="section-title text-center my-5">I nostri Gelati</h3>
 
         <!-- Trigger -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-        Sei allergico/a qualcosa?
-        </button>
+        <div  class="text-center">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                Sei allergico/a qualcosa?
+            </button>
+        </div>
+
+
+        <br><br>
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -321,7 +217,7 @@
                     //echo "ALLERGENI-->".$selezione_allergeni."<br>";
 
                     include 'connessione_db.php';
-                    $sql = "SELECT DISTINCT nome, text, estensione_img FROM prodotto WHERE disponibile = 1";
+                    $sql = "SELECT DISTINCT nome, text, estensione_img FROM prodotto WHERE disponibile = 1 ORDER BY (prodotto.nome)";
                     $result = $conn->query($sql);
 
 
@@ -348,6 +244,7 @@
                                 $array_nomi[$counter] = $row['nome'];
                                 $array_text[$counter] = $row['text'];
                                 $estensione_img[$counter] = $row['estensione_img'];
+
                                 $counter++;
                             }
 
