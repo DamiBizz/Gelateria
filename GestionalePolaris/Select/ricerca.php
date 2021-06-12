@@ -55,6 +55,7 @@
         $disp = "";
         if(!empty($_POST['true']) && empty($_POST['false'])) $disp= " AND disponibile = 1";
         if(empty($_POST['true']) && !empty($_POST['false'])) $disp= " AND disponibile = 0";
+        if(!empty($_POST['true']) && !empty($_POST['false'])) header("Location: $GLOBALS[domain_login]");
         
 
         //-----------------------------------------CONDIZIONII-------------------------------------
@@ -65,6 +66,8 @@
 
         //se il nome è selezionato
         else if (!empty($_POST['Prodotto'])){ //OK
+
+                $counter = 1;
 
                 $nome = $prodotto;
 

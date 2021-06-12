@@ -21,8 +21,8 @@
         
     
          //---------------------------------Modifica dati Account--------------------------------------
-         $stmt = $conn->prepare("UPDATE utente SET nome=?, pwd=?, ruolo=? WHERE nome=?");
-         $stmt->bind_param("ssis", $nome, $pwd, $ruolo, $nome);
+         $stmt = $conn->prepare("UPDATE utente SET pwd=? WHERE nome=?");
+         $stmt->bind_param("ss", $pwd, $nome);
          
          //---------------------------------Controllo Dati modifica dati--------------------------------------
          if (!$stmt->execute()){
