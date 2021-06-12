@@ -58,12 +58,13 @@
         
 
         //-----------------------------------------CONDIZIONII-------------------------------------
-        if(empty($prodotto) && empty($ingrediente) && empty($allergene) && empty($_POST['true']) && empty($_POST['false'])){ //errore
+        //non ha selezionato nulla
+        if(empty($prodotto) && empty($ingrediente) && empty($allergene) && empty($_POST['true']) && empty($_POST['false'])){ //OK
             echo "seleziona qualcosa";
         }
 
         //se il nome è selezionato
-        else if (!empty($_POST['Prodotto'])){
+        else if (!empty($_POST['Prodotto'])){ //OK
 
                 $nome = $prodotto;
 
@@ -150,8 +151,10 @@
         }
 
         //se selezionato è solo disp
-        else if (empty($_POST['Prodotto']) && empty($ingrediente) && empty($allergene) && !empty($disp)){
+        else if (empty($_POST['Prodotto']) && empty($ingrediente) && empty($allergene) && !empty($disp)){ //OK
             
+            $counter = 1; //per la verifica finale
+
             $sql5 = "SELECT DISTINCT nome
                         FROM prodotto 
                         WHERE 1=1" .$disp;
@@ -216,7 +219,7 @@
         }
         
         //gli altri casi
-        else if (empty($_POST['Prodotto'])){
+        else if (empty($_POST['Prodotto'])){ //OK
 
             if(empty($prodotto) && empty($ingrediente) && !empty($allergene)){ //OK
                 $sql = "SELECT DISTINCT prodotto.nome
@@ -264,12 +267,14 @@
                         $counter_prima++;
                     }
 
-                    
+                    $Array_prodotto = NULL;
+                    $counter = 0;
 
                     for($i=0; $i<$counter_prima; $i++){
 
                         $nome = $Array_prodotto_prima[$i];
                         $flag = false;
+                        
 
                         $sql = "SELECT DISTINCT prodotto.nome
                             FROM ingrediente, prodotto_ingrediente, prodotto, allergene
@@ -278,17 +283,12 @@
                             AND Prodotto.nome = '$nome'"
                             .$stringa_nome_allergene;
                         
-                            $Array_prodotto = NULL;
-                            $counter = 0;
+                            
                             $result = $conn->query($sql);
                             while($row = $result->fetch_assoc()) { 
                                 $Array_prodotto[$counter] = $row['nome'];
                                 $counter++;
                             }
-
-                            /*for($i=0; $i<$counter; $i++){
-                                echo "$i --> $Array_prodotto[$i]";
-                            }*/
                     }
             }
 
@@ -383,6 +383,9 @@
         }
 
 
+        if ($counter == 0){
+            echo "Nessun gelato trovato";
+        }
        
         echo "</tbody>";
                     

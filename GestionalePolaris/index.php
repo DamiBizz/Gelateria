@@ -57,7 +57,7 @@
     ?> 
     <li class="li_up"><a href="Select/ricerca_tutto.php">Ricerca TUTTO</a></li>
     <li class="li_up" style="float:right"><a class="active" href="logout.php">Logout</a></li>
-    <li class="li_up" style="float:right"><a href="">Modifica Password</a></li>
+    <li class="li_up" style="float:right"><a href="Tabelle/utente/modifica_singola_password.php">Modifica Password</a></li>
     </ul>
 
 

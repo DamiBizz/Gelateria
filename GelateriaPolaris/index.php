@@ -12,7 +12,7 @@
 
         $supporto = NULL;
         while ($row = $result->fetch_assoc()) {
-            $supporto .= "$row[nome] & ";
+            $supporto .= "$row[nome]; ";
         }
 
         if(!empty($supporto)){ //togli le ultime due parole
@@ -36,7 +36,9 @@
 
         $supporto = NULL;
         while ($row = $result->fetch_assoc()) {
-            $supporto .= "$row[nome] & ";
+            //$supporto .= "$row[nome] & ";
+            if($row['sigla']!="") $supporto .= $row['nome'] . " (".$row['sigla']."); ";
+            else $supporto .= "$row[nome]; ";
         }
 
         if(!empty($supporto)){ //togli le ultime due parole
@@ -311,8 +313,8 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    Ingredienti: '.trova_ingredienti($array_nomi[$i]).' <br>
-                                    Allergeni: '.trova_allergeni($array_nomi[$i]).'
+                                    <b>Ingredienti:</b> '.trova_ingredienti($array_nomi[$i]).' <br>
+                                    <b>Allergeni:</b> '.trova_allergeni($array_nomi[$i]).'
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
